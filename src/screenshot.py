@@ -11,7 +11,7 @@ def take_screenshot():
     image = cv2.cvtColor(np.array(image),cv2.COLOR_RGB2BGR)
     cv2.imwrite("screenshot.jpg", image)
     image=Image.open("screenshot.jpg")
-    image.save("screenshot.jpg", quality=1)
+    image.save("screenshot.jpg", quality=30)
     image=open("screenshot.jpg","rb")
     encoded_image = base64.b64encode(image.read()).decode()
     md5=hashlib.md5(encoded_image.encode("utf-8")).hexdigest()
