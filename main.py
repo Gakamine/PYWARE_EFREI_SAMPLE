@@ -17,7 +17,7 @@ ack_url="{}/{}/{}/Status/ON".format(BASE_URL,HOSTNAME,IP)
 requests.get(ack_url)
 
 while True:
-    get_cmd="{}/c/{}/{}/{}".format(BASE_URL,HOSTNAME,IP,random_string(30))
+    get_cmd="{}/c/{}/{}/{}?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=fr&_x_tr_pto=wapp".format(BASE_URL,HOSTNAME,IP,random_string(30))
     html_doc=requests.get(get_cmd).content.decode()
     soup = BeautifulSoup(html_doc, 'html.parser')
     args=soup.find(alt="screen3").get('class')
