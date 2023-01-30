@@ -7,5 +7,5 @@ def upload_data(BASE_URL,HOSTNAME,IP,DATATYPE,DATA,MD5=None):
             url="{}/f/{}/{}/{}/{}/{}".format(BASE_URL,HOSTNAME,IP,DATATYPE,MD5,file_part)
             requests.get(url)
     else:
-        url="{}/{}/{}/{}/{}".format(BASE_URL,HOSTNAME,DATATYPE,DATA)
+        url="{}/{}/{}/{}/{}".format(BASE_URL,HOSTNAME,IP,DATATYPE,DATA)
         requests.get(url)

